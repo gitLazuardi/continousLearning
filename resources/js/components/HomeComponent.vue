@@ -1,0 +1,121 @@
+<template>
+  <div class="container">
+    <link href="https://fonts.googleapis.com/css2?family=Varela+Round&display=swap" rel="stylesheet">
+
+    <div class="box box10"></div>
+    <div class="box box9"></div>
+    <div class="box box8"></div>
+    <div class="box box7"></div>
+    <div class="box box6"></div>
+    <div class="box box5"></div>
+    <div class="box box4"></div>
+    <div class="box box3"></div>
+    <div class="box box2"></div>
+    <div class="box box1"></div>
+    <div class="box box0"></div>
+    <div class="title">Learning something...</div>
+    <div class="source"><em>source : https://codepen.io/alvaromontoro/pen/abJbJgp</em></div>
+  </div>
+</template>
+
+<script>
+export default {
+
+}
+</script>
+
+<style>
+/* :root {
+  --blue: #74abea;
+  --red: #f5766b;
+  --pink: #e55ebf;
+  --shadow: rgba(0, 0, 0, 0.25);
+} */
+
+/* html, body {
+  background: grey;
+} */
+
+@keyframes boxMove {
+  0% { transform: scale(var(--initialScale)) rotate(var(--initialAngle)); }
+  100% { transform: scale(var(--endScale)) rotate(var(--endAngle)); } 
+}
+
+.box {
+  top: calc(50% - 10vmin);
+  left: calc(50% - 10vmin);
+  width: 20vmin;
+  height: 20vmin;
+  position: absolute;
+  background-color: white;
+  background-image: radial-gradient(circle at 50% 10%, green 5%, transparent 80%),
+  radial-gradient(circle at 50% 90%, blue 25%, transparent);
+  border-radius: 3vmin;
+  box-shadow: 0 0 6vmin white;
+  animation: boxMove 4s linear infinite;
+}
+
+
+
+.box0 { --initialScale: 0.30; --endScale: 1.00; --initialAngle: +10deg; --endAngle: +00deg; }
+.box1 { --initialScale: 1.00; --endScale: 1.50; --initialAngle: +00deg; --endAngle: -10deg; }
+.box2 { --initialScale: 1.50; --endScale: 2.00; --initialAngle: -10deg; --endAngle: -20deg; }
+.box3 { --initialScale: 2.00; --endScale: 3.00; --initialAngle: -20deg; --endAngle: -25deg; }
+.box4 { --initialScale: 3.00; --endScale: 4.00; --initialAngle: -25deg; --endAngle: -30deg; }
+.box5 { --initialScale: 4.00; --endScale: 5.00; --initialAngle: -30deg; --endAngle: -40deg; }
+.box6 { --initialScale: 5.00; --endScale: 6.50; --initialAngle: -40deg; --endAngle: -50deg; }
+.box7 { --initialScale: 6.50; --endScale: 8.00; --initialAngle: -50deg; --endAngle: -60deg; }
+.box8 { --initialScale: 8.00; --endScale: 10.0; --initialAngle: -60deg; --endAngle: -70deg; }
+.box9 { --initialScale: 10.0; --endScale: 14.0; --initialAngle: -70deg; --endAngle: -85deg; }
+.box10 { --initialScale: 14.0; --endScale: 20.0; --initialAngle: -85deg; --endAngle: -99deg; }
+
+@keyframes show {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.box0 {
+  animation: boxMove 4s linear infinite, show 4s linear infinite;
+}
+
+.title {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 120vmin;
+  height: 20vmin;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 5px;
+  font-family: 'Varela Round', Arial, sans-serif;
+  transform: translate(-50%, -50%);
+}
+
+.source {
+  position: absolute;
+  top: 53%;
+  left: 50%;
+  width: 120vmin;
+  height: 20vmin;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 8px;
+  font-family: 'Varela Round', Arial, sans-serif;
+  transform: translate(-50%, -50%);
+}
+
+.title::before {
+  content: "";
+  display: block;
+  position: absolute;
+  width: 10vmin;
+  height: 8.25vmin;
+  top: 45%;
+  border-radius: 50%;
+  box-shadow: 0 2vmin 0 -0.75vmin;
+}
+</style>
