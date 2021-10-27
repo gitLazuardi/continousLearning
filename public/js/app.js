@@ -2365,6 +2365,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2373,6 +2378,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   data: function data() {
     return {
       startFrom: 30,
+      rangeDate: 7,
       datacollection: null,
       dataOption: {
         label: [],
@@ -2406,7 +2412,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
-                _context.next = 2;
+                _this.startFrom > 1 ? _this.startFrom = _this.startFrom : _this.startFrom = 2;
+                _this.rangeDate > 1 ? _this.rangeDate = _this.rangeDate : _this.rangeDate = 2;
+                _context.next = 4;
                 return axios.get("/api/covid/last-month/".concat(_this.startFrom)).then(function (response) {
                   _this.generateDataset(response.data.timeline);
 
@@ -2419,7 +2427,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   };
                 });
 
-              case 2:
+              case 4:
                 _this.datacollection = {
                   fill: false,
                   labels: _this.dataOption.label,
@@ -2447,7 +2455,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }]
                 };
 
-              case 3:
+              case 5:
               case "end":
                 return _context.stop();
             }
@@ -2494,19 +2502,22 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           tempDeath,
           count = 0;
       Object.keys(datas.cases).forEach(function (key) {
-        if (count > 0) {
-          this.dataOption.label.push(key);
-          datas.cases[key] == 0 ? this.dataOption.cases.push(0) : this.dataOption.cases.push(datas.cases[key] - tempCase);
-          datas.deaths[key] == 0 ? this.dataOption.deaths.push(0) : this.dataOption.deaths.push(datas.deaths[key] - tempDeath);
-          datas.recovered[key] == 0 ? this.dataOption.recovered.push(0) : this.dataOption.recovered.push(datas.recovered[key] - tempRec);
-          tempCase = datas.cases[key];
-          tempRec = datas.recovered[key];
-          tempDeath = datas.deaths[key];
-        } else {
-          tempCase = datas.cases[key];
-          tempRec = datas.recovered[key];
-          tempDeath = datas.deaths[key];
-          count++;
+        if (count <= this.rangeDate) {
+          if (count > 0) {
+            this.dataOption.label.push(key);
+            datas.cases[key] == 0 ? this.dataOption.cases.push(0) : this.dataOption.cases.push(datas.cases[key] - tempCase);
+            datas.deaths[key] == 0 ? this.dataOption.deaths.push(0) : this.dataOption.deaths.push(datas.deaths[key] - tempDeath);
+            datas.recovered[key] == 0 ? this.dataOption.recovered.push(0) : this.dataOption.recovered.push(datas.recovered[key] - tempRec);
+            tempCase = datas.cases[key];
+            tempRec = datas.recovered[key];
+            tempDeath = datas.deaths[key];
+            count++;
+          } else {
+            tempCase = datas.cases[key];
+            tempRec = datas.recovered[key];
+            tempDeath = datas.deaths[key];
+            count++;
+          }
         }
       }, this);
     }
@@ -84317,6 +84328,36 @@ var render = function() {
                       return
                     }
                     _vm.startFrom = $event.target.value
+                  }
+                }
+              })
+            ]),
+            _vm._v(" "),
+            _c("td", { attrs: { width: "30%" } }, [_vm._v("Days")])
+          ]),
+          _vm._v(" "),
+          _c("tr", [
+            _c("td", { attrs: { width: "30%" } }, [_vm._v("In Range :")]),
+            _vm._v(" "),
+            _c("td", { attrs: { width: "40%" } }, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.rangeDate,
+                    expression: "rangeDate"
+                  }
+                ],
+                staticClass: "form-control",
+                attrs: { type: "number" },
+                domProps: { value: _vm.rangeDate },
+                on: {
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.rangeDate = $event.target.value
                   }
                 }
               })

@@ -39,6 +39,11 @@
             <td width="30%">Days</td>
           </tr>
           <tr>
+            <td width="30%">In Range :</td>
+            <td width="40%"><input v-model="rangeDate" type="number" class="form-control"></td>
+            <td width="30%">Days</td>
+          </tr>
+          <tr>
             <td><button type="button" class="btn btn-primary text-light" @click="fillData()">Procceed</button></td>
           </tr>
         </table>
@@ -58,6 +63,7 @@
     data () {
       return {
         startFrom: 30,
+        rangeDate: 7,
         datacollection: null,
         dataOption: {label:[],cases:[],recovered:[],deaths:[],daily:[]},
         today: {cases: 0,death: 0,recover: 0,totcases: 0,totdeath: 0,totrecover: 0},
@@ -72,6 +78,8 @@
     },
     methods: {
       async fillData () {
+        this.startFrom > 1 ? this.startFrom = this.startFrom : this.startFrom = 2;
+        this.rangeDate > 1 ? this.rangeDate = this.rangeDate : this.rangeDate = 2;
         await axios.get(`/api/covid/last-month/${this.startFrom}`)
         .then(
           response => {
@@ -129,6 +137,7 @@
         this.dataOption = {label:[],cases:[],recovered:[],deaths:[],daily:[]};
         let tempCase,tempRec,tempDeath,count = 0;
         Object.keys(datas.cases).forEach(function(key) {
+          if(count <= this.rangeDate){
           if (count > 0) {
             this.dataOption.label.push(key);
             datas.cases[key] == 0 ? this.dataOption.cases.push(0) : this.dataOption.cases.push(datas.cases[key]-tempCase);
@@ -137,11 +146,13 @@
             tempCase = datas.cases[key]
             tempRec = datas.recovered[key]
             tempDeath = datas.deaths[key]
+            count++
           } else {
             tempCase = datas.cases[key]
             tempRec = datas.recovered[key]
             tempDeath = datas.deaths[key]
             count++
+          }
           }
         }, this);
       },

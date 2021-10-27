@@ -7,25 +7,18 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Category;
 use App\Http\Resources\Movies;
-
+use App\Helpers\ApiHandler;
 class MovieController extends Controller
 {
     public function omdb(Request $request) {
-        $ch = curl_init(); 
-        curl_setopt($ch, CURLOPT_URL, "http://www.omdbapi.com/?apikey=7b86ede0&s=".urlencode($request['s'])); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        $output = curl_exec($ch); 
-        curl_close($ch);      
-        return $output;
+        $url = "http://www.omdbapi.com/?apikey=7b86ede0&s=".urlencode($request['s']); 
+        $api = new ApiHandler();
+        return $api->getPublic($url);
     }
     public function omdbDetail(Request $request) {
         $url = "http://www.omdbapi.com/?apikey=7b86ede0&i=".$request['i'];
-        $ch = curl_init(); 
-        curl_setopt($ch, CURLOPT_URL, $url); 
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1); 
-        $output = curl_exec($ch); 
-        curl_close($ch);      
-        return $output;
+        $api = new ApiHandler();
+        return $api->getPublic($url);
     }
 
     public function index()
