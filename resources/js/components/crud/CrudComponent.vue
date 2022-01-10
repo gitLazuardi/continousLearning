@@ -1,5 +1,8 @@
 <template>
   <div class="row">
+    <div class="col-sm-12">
+      <router-link to="/report/movies" target="_blank" class="btn btn-sm btn-primary text-light">Export Excel</router-link>
+    </div>
     <div class="col-md-4">
       <div class="card">
         <div class="card-header font-weight-bold">Create Movies</div>

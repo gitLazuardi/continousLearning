@@ -63,7 +63,7 @@
     data () {
       return {
         startFrom: 30,
-        rangeDate: 7,
+        rangeDate: 30,
         datacollection: null,
         dataOption: {label:[],cases:[],recovered:[],deaths:[],daily:[]},
         today: {cases: 0,death: 0,recover: 0,totcases: 0,totdeath: 0,totrecover: 0},

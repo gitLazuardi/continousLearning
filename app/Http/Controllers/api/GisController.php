@@ -37,7 +37,7 @@ class GisController extends Controller
 
     public function delete($id)
     {
-        $pinPoint = Pinpoint::where('id', '=', $id);
+        $pinPoint = Pinpoint::find($id);
         $pinPoint->delete();
     }
 }
