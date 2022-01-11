@@ -15,9 +15,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', function () {
-    return view('layouts/app');
-})->name('/');
+Route::view('/', 'layouts/app');
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/report/movies', [App\Http\Controllers\api\MovieController::class, 'exportData'])->name('report');
 

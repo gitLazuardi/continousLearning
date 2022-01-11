@@ -80,7 +80,7 @@
       async fillData () {
         this.startFrom > 1 ? this.startFrom = this.startFrom : this.startFrom = 2;
         this.rangeDate > 1 ? this.rangeDate = this.rangeDate : this.rangeDate = 2;
-        await axios.get(`/api/covid/last-month/${this.startFrom}`)
+        await axios.get(`https://milearn.herokuapp.com/api/covid/last-month/${this.startFrom}`)
         .then(
           response => {
             this.generateDataset(response.data.timeline);
@@ -124,7 +124,7 @@
         }
       },
       async fillDataToday () {
-        await axios.get('/api/covid/').then(response => {
+        await axios.get('https://milearn.herokuapp.com/api/covid/').then(response => {
           this.today.cases = response.data.todayCases
           this.today.death = response.data.todayDeaths
           this.today.recover = response.data.todayRecovered
