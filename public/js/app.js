@@ -2434,7 +2434,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _this.startFrom > 1 ? _this.startFrom = _this.startFrom : _this.startFrom = 2;
                 _this.rangeDate > 1 ? _this.rangeDate = _this.rangeDate : _this.rangeDate = 2;
                 _context.next = 4;
-                return axios.get("https://milearn.herokuapp.com/api/covid/last-month/".concat(_this.startFrom)).then(function (response) {
+                return axios.get("/api/covid/last-month/".concat(_this.startFrom)).then(function (response) {
                   _this.generateDataset(response.data.timeline);
 
                   _this.infoMassages = {
@@ -2491,7 +2491,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
             switch (_context2.prev = _context2.next) {
               case 0:
                 _context2.next = 2;
-                return axios.get('https://milearn.herokuapp.com/api/covid/').then(function (response) {
+                return axios.get("/api/covid/today").then(function (response) {
                   _this2.today.cases = response.data.todayCases;
                   _this2.today.death = response.data.todayDeaths;
                   _this2.today.recover = response.data.todayRecovered;
@@ -2524,9 +2524,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         if (count <= this.rangeDate) {
           if (count > 0) {
             this.dataOption.label.push(key);
-            datas.cases[key] == 0 ? this.dataOption.cases.push(0) : this.dataOption.cases.push(datas.cases[key] - tempCase);
-            datas.deaths[key] == 0 ? this.dataOption.deaths.push(0) : this.dataOption.deaths.push(datas.deaths[key] - tempDeath);
-            datas.recovered[key] == 0 ? this.dataOption.recovered.push(0) : this.dataOption.recovered.push(datas.recovered[key] - tempRec);
+            datas.cases[key] > tempCase ? this.dataOption.cases.push(datas.cases[key] - tempCase) : this.dataOption.cases.push(0);
+            datas.deaths[key] > tempDeath ? this.dataOption.deaths.push(datas.deaths[key] - tempDeath) : this.dataOption.deaths.push(0);
+            datas.recovered[key] > tempRec ? this.dataOption.recovered.push(datas.recovered[key] - tempRec) : this.dataOption.recovered.push(0);
             tempCase = datas.cases[key];
             tempRec = datas.recovered[key];
             tempDeath = datas.deaths[key];

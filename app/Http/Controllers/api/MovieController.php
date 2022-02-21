@@ -7,23 +7,21 @@ use Illuminate\Http\Request;
 use App\Models\Movie;
 use App\Models\Category;
 use App\Http\Resources\Movies;
-use App\Helpers\ApiHandler;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Reader\Exception;
 use PhpOffice\PhpSpreadsheet\Writer\Xls;
 use PhpOffice\PhpSpreadsheet\IOFactory;
+use Illuminate\Support\Facades\Http;
 class MovieController extends Controller
 {
     public function omdb(Request $request) {
         $url = "http://www.omdbapi.com/?apikey=7b86ede0&s=".urlencode($request['s']); 
-        $api = new ApiHandler();
-        return $api->getPublic($url);
+        return Http::get($url);
     }
     public function omdbDetail(Request $request) {
         $url = "http://www.omdbapi.com/?apikey=7b86ede0&i=".$request['i'];
-        $api = new ApiHandler();
-        return $api->getPublic($url);
+        return Http::get($url);
     }
 
     public function index()
