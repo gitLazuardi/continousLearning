@@ -1,33 +1,34 @@
 <template>
   <div>
-    <em class="left">Source : https://disease.sh</em>
+    <em class="left">Source : https://disease.sh</em><br>
+    <em class="left">Last update : {{today.lastUpdate}}</em>
     <div v-if="infoMassages.description" class="col-md-12 text-danger">{{infoMassages.description}}</div>
-    <div class="font-weight-bold text-center">INDONESIA COVID CASES TODAY, TOTAL AND GRAPHIC CHART LAST {{startFrom}} DAYS</div>
+    <div class="font-weight-bold text-center">INDONESIA LATEST COVID-19 INFORMATION, TOTAL AND GRAPHIC LAST {{startFrom}} DAYS</div>
     <div class="font-weight-bold text-center">&nbsp;</div>
     <div class="row col-sm-12">
       <dir class="card col-sm-4 covid-info">
-        <div class="font-weight-bold">TODAY CASES</div>
-        <div class="font-weight-bold text-center"> <font v-model="today.cases">{{today.cases}}</font></div>
+        <div class="font-weight-bold">LATEST CASES</div>
+        <div class="font-weight-bold text-center"> <font v-model="today.todayCases">{{today.todayCases}}</font></div>
       </dir>
       <dir class="card col-sm-4 covid-info">
-        <div class="font-weight-bold">TODAY DEATH</div>
-        <div class="font-weight-bold text-center"><font v-model="today.death">{{today.death}}</font></div>
+        <div class="font-weight-bold">LATEST DEATH</div>
+        <div class="font-weight-bold text-center"><font v-model="today.todayDeaths">{{today.todayDeaths}}</font></div>
       </dir>
       <dir class="card col-sm-4 covid-info">
-        <div class="font-weight-bold">TODAY RECOVERED</div>
-        <div class="font-weight-bold text-center"><font v-model="today.recover">{{today.recover}}</font></div>
+        <div class="font-weight-bold">LATEST RECOVERED</div>
+        <div class="font-weight-bold text-center"><font v-model="today.todayRecovered">{{today.todayRecovered}}</font></div>
       </dir>
       <dir class="card col-sm-4 covid-info">
         <div class="font-weight-bold">TOTAL CASES</div>
-        <div class="font-weight-bold text-center"><font v-model="today.totcases">{{today.totcases}}</font></div>
+        <div class="font-weight-bold text-center"><font v-model="today.cases">{{today.cases}}</font></div>
       </dir>
       <dir class="card col-sm-4 covid-info">
         <div class="font-weight-bold">TOTAL DEATH</div>
-        <div class="font-weight-bold text-center"><font v-model="today.totdeath">{{today.totdeath}}</font></div>
+        <div class="font-weight-bold text-center"><font v-model="today.deaths">{{today.deaths}}</font></div>
       </dir>
       <dir class="card col-sm-4 covid-info">
         <div class="font-weight-bold">TOTAL RECOVERED</div>
-        <div class="font-weight-bold text-center"><font v-model="today.totrecover">{{today.totrecover}}</font></div>
+        <div class="font-weight-bold text-center"><font v-model="today.recovered">{{today.recovered}}</font></div>
       </dir>
     </div>
     <hr>
@@ -66,7 +67,7 @@
         rangeDate: 30,
         datacollection: null,
         dataOption: {label:[],cases:[],recovered:[],deaths:[],daily:[]},
-        today: {cases: 0,death: 0,recover: 0,totcases: 0,totdeath: 0,totrecover: 0},
+        today: {},
         infoMassages: {
           description: 'Loading data form the sources ...'
         },
@@ -125,36 +126,30 @@
       },
       async fillDataToday () {
         await axios.get(`/api/covid/today`).then(response => {
-          this.today.cases = response.data.todayCases
-          this.today.death = response.data.todayDeaths
-          this.today.recover = response.data.todayRecovered
-          this.today.totcases = response.data.cases
-          this.today.totdeath = response.data.deaths
-          this.today.totrecover = response.data.recovered
+          this.today = response.data;
+          this.today.lastUpdate = 'Yesterday'
         });
       },
       generateDataset(datas){
         this.dataOption = {label:[],cases:[],recovered:[],deaths:[],daily:[]};
         let tempCase,tempRec,tempDeath,count = 0;
-        Object.keys(datas.cases).forEach(function(key) {
-          if(count <= this.rangeDate){
+        let sliced = Object.entries(datas.cases).slice(0, this.rangeDate+1);
+        sliced.forEach(element => {
             if (count > 0) {
-              this.dataOption.label.push(key);
-              datas.cases[key] > tempCase ? this.dataOption.cases.push(datas.cases[key]-tempCase) : this.dataOption.cases.push(0);
-              datas.deaths[key] > tempDeath ? this.dataOption.deaths.push(datas.deaths[key]-tempDeath) : this.dataOption.deaths.push(0);
-              datas.recovered[key] > tempRec ? this.dataOption.recovered.push(datas.recovered[key]-tempRec) : this.dataOption.recovered.push(0);
-              tempCase = datas.cases[key]
-              tempRec = datas.recovered[key]
-              tempDeath = datas.deaths[key]
-              count++
-            } else {
-              tempCase = datas.cases[key]
-              tempRec = datas.recovered[key]
-              tempDeath = datas.deaths[key]
-              count++
+              this.dataOption.label.push(element[0]);
+              datas.cases[element[0]] > tempCase ? this.dataOption.cases.push(datas.cases[element[0]]-tempCase) : this.dataOption.cases.push(0);
+              datas.deaths[element[0]] > tempDeath ? this.dataOption.deaths.push(datas.deaths[element[0]]-tempDeath) : this.dataOption.deaths.push(0);
+              datas.recovered[element[0]] > tempRec ? this.dataOption.recovered.push(datas.recovered[element[0]]-tempRec) : this.dataOption.recovered.push(0);
+              tempCase = datas.cases[element[0]]
+              tempRec = datas.recovered[element[0]]
+              tempDeath = datas.deaths[element[0]]
+            }else{
+              tempCase = datas.cases[element[0]]
+              tempRec = datas.recovered[element[0]]
+              tempDeath = datas.deaths[element[0]]
+              count++;
             }
-          }
-        }, this);
+        });
       },
     }
   }

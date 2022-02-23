@@ -2244,7 +2244,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this3.errorMassages = {};
                   _this3.form = {};
-                  document.getElementById("gow").click();
+
+                  if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+                    document.getElementById("gow").click();
+                  }
                 })["catch"](function (error) {
                   _this3.errorMassages = error.response.data.errors;
 
@@ -2389,6 +2392,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   components: {
@@ -2406,14 +2410,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         deaths: [],
         daily: []
       },
-      today: {
-        cases: 0,
-        death: 0,
-        recover: 0,
-        totcases: 0,
-        totdeath: 0,
-        totrecover: 0
-      },
+      today: {},
       infoMassages: {
         description: 'Loading data form the sources ...'
       }
@@ -2492,12 +2489,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return axios.get("/api/covid/today").then(function (response) {
-                  _this2.today.cases = response.data.todayCases;
-                  _this2.today.death = response.data.todayDeaths;
-                  _this2.today.recover = response.data.todayRecovered;
-                  _this2.today.totcases = response.data.cases;
-                  _this2.today.totdeath = response.data.deaths;
-                  _this2.today.totrecover = response.data.recovered;
+                  _this2.today = response.data;
+                  _this2.today.lastUpdate = 'Yesterday';
                 });
 
               case 2:
@@ -2509,6 +2502,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }))();
     },
     generateDataset: function generateDataset(datas) {
+      var _this3 = this;
+
       this.dataOption = {
         label: [],
         cases: [],
@@ -2520,25 +2515,24 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           tempRec,
           tempDeath,
           count = 0;
-      Object.keys(datas.cases).forEach(function (key) {
-        if (count <= this.rangeDate) {
-          if (count > 0) {
-            this.dataOption.label.push(key);
-            datas.cases[key] > tempCase ? this.dataOption.cases.push(datas.cases[key] - tempCase) : this.dataOption.cases.push(0);
-            datas.deaths[key] > tempDeath ? this.dataOption.deaths.push(datas.deaths[key] - tempDeath) : this.dataOption.deaths.push(0);
-            datas.recovered[key] > tempRec ? this.dataOption.recovered.push(datas.recovered[key] - tempRec) : this.dataOption.recovered.push(0);
-            tempCase = datas.cases[key];
-            tempRec = datas.recovered[key];
-            tempDeath = datas.deaths[key];
-            count++;
-          } else {
-            tempCase = datas.cases[key];
-            tempRec = datas.recovered[key];
-            tempDeath = datas.deaths[key];
-            count++;
-          }
+      var sliced = Object.entries(datas.cases).slice(0, this.rangeDate + 1);
+      sliced.forEach(function (element) {
+        if (count > 0) {
+          _this3.dataOption.label.push(element[0]);
+
+          datas.cases[element[0]] > tempCase ? _this3.dataOption.cases.push(datas.cases[element[0]] - tempCase) : _this3.dataOption.cases.push(0);
+          datas.deaths[element[0]] > tempDeath ? _this3.dataOption.deaths.push(datas.deaths[element[0]] - tempDeath) : _this3.dataOption.deaths.push(0);
+          datas.recovered[element[0]] > tempRec ? _this3.dataOption.recovered.push(datas.recovered[element[0]] - tempRec) : _this3.dataOption.recovered.push(0);
+          tempCase = datas.cases[element[0]];
+          tempRec = datas.recovered[element[0]];
+          tempDeath = datas.deaths[element[0]];
+        } else {
+          tempCase = datas.cases[element[0]];
+          tempRec = datas.recovered[element[0]];
+          tempDeath = datas.deaths[element[0]];
+          count++;
         }
-      }, this);
+      });
     }
   }
 });
@@ -84076,7 +84070,7 @@ var render = function() {
         _c("div", { staticClass: "card-body" }, [
           _c(
             "table",
-            { staticClass: "table" },
+            { staticClass: "table table-responsive" },
             [
               _vm._m(1),
               _vm._v(" "),
@@ -84192,6 +84186,11 @@ var render = function() {
       _c("em", { staticClass: "left" }, [
         _vm._v("Source : https://disease.sh")
       ]),
+      _c("br"),
+      _vm._v(" "),
+      _c("em", { staticClass: "left" }, [
+        _vm._v("Last update : " + _vm._s(_vm.today.lastUpdate))
+      ]),
       _vm._v(" "),
       _vm.infoMassages.description
         ? _c("div", { staticClass: "col-md-12 text-danger" }, [
@@ -84201,7 +84200,7 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "font-weight-bold text-center" }, [
         _vm._v(
-          "INDONESIA COVID CASES TODAY, TOTAL AND GRAPHIC CHART LAST " +
+          "INDONESIA LATEST COVID-19 INFORMATION, TOTAL AND GRAPHIC LAST " +
             _vm._s(_vm.startFrom) +
             " DAYS"
         )
@@ -84215,7 +84214,88 @@ var render = function() {
         [
           _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
             _c("div", { staticClass: "font-weight-bold" }, [
-              _vm._v("TODAY CASES")
+              _vm._v("LATEST CASES")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "font-weight-bold text-center" },
+              [
+                _c(
+                  "font",
+                  {
+                    model: {
+                      value: _vm.today.todayCases,
+                      callback: function($$v) {
+                        _vm.$set(_vm.today, "todayCases", $$v)
+                      },
+                      expression: "today.todayCases"
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.today.todayCases))]
+                )
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
+            _c("div", { staticClass: "font-weight-bold" }, [
+              _vm._v("LATEST DEATH")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "font-weight-bold text-center" },
+              [
+                _c(
+                  "font",
+                  {
+                    model: {
+                      value: _vm.today.todayDeaths,
+                      callback: function($$v) {
+                        _vm.$set(_vm.today, "todayDeaths", $$v)
+                      },
+                      expression: "today.todayDeaths"
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.today.todayDeaths))]
+                )
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
+            _c("div", { staticClass: "font-weight-bold" }, [
+              _vm._v("LATEST RECOVERED")
+            ]),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "font-weight-bold text-center" },
+              [
+                _c(
+                  "font",
+                  {
+                    model: {
+                      value: _vm.today.todayRecovered,
+                      callback: function($$v) {
+                        _vm.$set(_vm.today, "todayRecovered", $$v)
+                      },
+                      expression: "today.todayRecovered"
+                    }
+                  },
+                  [_vm._v(_vm._s(_vm.today.todayRecovered))]
+                )
+              ],
+              1
+            )
+          ]),
+          _vm._v(" "),
+          _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
+            _c("div", { staticClass: "font-weight-bold" }, [
+              _vm._v("TOTAL CASES")
             ]),
             _vm._v(" "),
             _c(
@@ -84242,87 +84322,6 @@ var render = function() {
           _vm._v(" "),
           _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
             _c("div", { staticClass: "font-weight-bold" }, [
-              _vm._v("TODAY DEATH")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "font-weight-bold text-center" },
-              [
-                _c(
-                  "font",
-                  {
-                    model: {
-                      value: _vm.today.death,
-                      callback: function($$v) {
-                        _vm.$set(_vm.today, "death", $$v)
-                      },
-                      expression: "today.death"
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.today.death))]
-                )
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
-            _c("div", { staticClass: "font-weight-bold" }, [
-              _vm._v("TODAY RECOVERED")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "font-weight-bold text-center" },
-              [
-                _c(
-                  "font",
-                  {
-                    model: {
-                      value: _vm.today.recover,
-                      callback: function($$v) {
-                        _vm.$set(_vm.today, "recover", $$v)
-                      },
-                      expression: "today.recover"
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.today.recover))]
-                )
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
-            _c("div", { staticClass: "font-weight-bold" }, [
-              _vm._v("TOTAL CASES")
-            ]),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "font-weight-bold text-center" },
-              [
-                _c(
-                  "font",
-                  {
-                    model: {
-                      value: _vm.today.totcases,
-                      callback: function($$v) {
-                        _vm.$set(_vm.today, "totcases", $$v)
-                      },
-                      expression: "today.totcases"
-                    }
-                  },
-                  [_vm._v(_vm._s(_vm.today.totcases))]
-                )
-              ],
-              1
-            )
-          ]),
-          _vm._v(" "),
-          _c("dir", { staticClass: "card col-sm-4 covid-info" }, [
-            _c("div", { staticClass: "font-weight-bold" }, [
               _vm._v("TOTAL DEATH")
             ]),
             _vm._v(" "),
@@ -84334,14 +84333,14 @@ var render = function() {
                   "font",
                   {
                     model: {
-                      value: _vm.today.totdeath,
+                      value: _vm.today.deaths,
                       callback: function($$v) {
-                        _vm.$set(_vm.today, "totdeath", $$v)
+                        _vm.$set(_vm.today, "deaths", $$v)
                       },
-                      expression: "today.totdeath"
+                      expression: "today.deaths"
                     }
                   },
-                  [_vm._v(_vm._s(_vm.today.totdeath))]
+                  [_vm._v(_vm._s(_vm.today.deaths))]
                 )
               ],
               1
@@ -84361,14 +84360,14 @@ var render = function() {
                   "font",
                   {
                     model: {
-                      value: _vm.today.totrecover,
+                      value: _vm.today.recovered,
                       callback: function($$v) {
-                        _vm.$set(_vm.today, "totrecover", $$v)
+                        _vm.$set(_vm.today, "recovered", $$v)
                       },
-                      expression: "today.totrecover"
+                      expression: "today.recovered"
                     }
                   },
-                  [_vm._v(_vm._s(_vm.today.totrecover))]
+                  [_vm._v(_vm._s(_vm.today.recovered))]
                 )
               ],
               1

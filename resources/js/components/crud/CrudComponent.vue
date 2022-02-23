@@ -64,7 +64,7 @@
       <div class="card">
         <div class="card-header font-weight-bold">Movie List</div>
         <div class="card-body">
-          <table class="table">
+          <table class="table table-responsive">
             <tr>
               <th>No</th>
               <th>Title</th>
@@ -132,7 +132,9 @@ export default {
           this.getMovies();
           this.errorMassages = {};
           this.form = {};
-          document.getElementById("gow").click();
+          if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+            document.getElementById("gow").click();
+          }
         }
       ).catch(
         error => {

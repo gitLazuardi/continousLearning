@@ -16,12 +16,16 @@ use Illuminate\Support\Facades\Http;
 class MovieController extends Controller
 {
     public function omdb(Request $request) {
-        $url = "http://www.omdbapi.com/?apikey=7b86ede0&s=".urlencode($request['s']); 
-        return Http::get($url);
+        return Http::get("http://www.omdbapi.com/",[
+            'apikey'=>'7b86ede0',
+            's'=> urlencode($request['s'])
+        ]);
     }
     public function omdbDetail(Request $request) {
-        $url = "http://www.omdbapi.com/?apikey=7b86ede0&i=".$request['i'];
-        return Http::get($url);
+        return Http::get("http://www.omdbapi.com/",[
+            'apikey'=>'7b86ede0',
+            'i'=> $request['i']
+        ]);
     }
 
     public function index()
