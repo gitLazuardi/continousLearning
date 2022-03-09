@@ -83740,12 +83740,12 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "col-md-4 simple-card" }, [
-    _c("h1", { staticClass: "text-light font-weight-bold" }, [_vm._v("Login")]),
+    _c("h1", { staticClass: "text-dark font-weight-bold" }, [_vm._v("Login")]),
     _vm._v(" "),
     _vm.show.clicked
       ? _c(
           "label",
-          { staticClass: "form-label bg-success text-light font-weight-bold" },
+          { staticClass: "form-label bg-success text-dark font-weight-bold" },
           [_vm._v("Login Form Filled Succesfully")]
         )
       : _vm._e(),
@@ -83754,7 +83754,7 @@ var render = function() {
       _c(
         "label",
         {
-          staticClass: "form-label text-light font-weight-bold",
+          staticClass: "form-label text-dark font-weight-bold",
           attrs: { for: "exampleInputEmail1" }
         },
         [_vm._v("Email address")]
@@ -83792,7 +83792,7 @@ var render = function() {
       _c(
         "label",
         {
-          staticClass: "form-label text-light font-weight-bold",
+          staticClass: "form-label text-dark font-weight-bold",
           attrs: { for: "exampleInputPassword1" }
         },
         [_vm._v("Password")]
@@ -83828,7 +83828,7 @@ var render = function() {
     _c(
       "button",
       {
-        staticClass: "btn btn-md btn-outline-light text-light font-weight-bold",
+        staticClass: "btn btn-md btn-outline-dark text-dark font-weight-bold",
         attrs: { type: "submit" },
         on: { click: _vm.login }
       },
@@ -83838,7 +83838,7 @@ var render = function() {
     _c(
       "button",
       {
-        staticClass: "btn btn-md btn-outline-light text-light font-weight-bold",
+        staticClass: "btn btn-md btn-outline-dark text-dark font-weight-bold",
         attrs: { type: "button" },
         on: { click: _vm.tryDemo }
       },
